@@ -10,21 +10,19 @@ class MyTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TabBar(
-        controller: tabController,
-        indicatorColor: Theme.of(context).colorScheme.primary,
-        labelColor: Theme.of(context).colorScheme.primary,
-        unselectedLabelColor: Theme.of(context).colorScheme.secondary,
-        tabs: const [
-          Tab(
-            text: 'Menu',
-          ),
-          Tab(
-            text: 'Reviews',
-          ),
-        ],
-      ),
+    return TabBar(
+      controller: tabController,
+      indicatorColor: Theme.of(context).colorScheme.primary,
+      labelColor: Theme.of(context).colorScheme.primary,
+      unselectedLabelColor: Theme.of(context).colorScheme.secondary,
+      tabs: const [
+        Tab(
+          icon: Icon(Icons.home), // ✅ ঠিক করা হয়েছে
+        ),
+        Tab(
+          icon: Icon(Icons.search),
+        ),
+      ],
     );
   }
 }
