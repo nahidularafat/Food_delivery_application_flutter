@@ -20,8 +20,14 @@ class MyTabBar extends StatelessWidget {
           icon: Icon(Icons.home), // ✅ ঠিক করা হয়েছে
         ),
         Tab(
-          icon: Icon(Icons.search),
+          icon: Icon(Icons.person),
         ),
+        Tab(
+          icon: Icon(Icons.settings),
+        ),
+
+
+
       ],
     );
   }

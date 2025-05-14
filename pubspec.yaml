@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   provider: ^6.1.1   # সর্বশেষ ভার্সন হতে পারে, নিচে "flutter pub outdated" দিয়ে চেক করতে পারেন
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -20,3 +19,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - lib/images/burgers/
+    - lib/images/salads/
+    - lib/images/sides/
+    - lib/images/drinks/
+    - lib/images/desserts/

@@ -12,19 +12,22 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  // TabController
+
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
-    super.dispose();
+    super.dispose(); // শুধুমাত্র একবার থাকা উচিত
   }
 
   @override
@@ -32,31 +35,35 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Scaffold(
       drawer: const MyDrawer(),
       body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          MySliverAppBar(
-            title: MyTabBar(tabController: _tabController),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Divider(
-                  indent: 25,
-                  endIndent: 25,
-                  color: Theme.of(context).colorScheme.secondary,
+        headerSliverBuilder:
+            (context, innerBoxIsScrolled) => [
+              MySliverAppBar(
+                title: MyTabBar(tabController: _tabController),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Divider(
+                      indent: 25,
+                      endIndent: 25,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ), // Divider
+                    // my current location
+                    const MyCurrentLocation(),
+                    // description box
+                    const MyDescriptionBox(),
+                  ],
                 ),
-                const MyCurrentLocation(),
-                const MyDescriptionBox(),
-              ],
-            ),
-          ),
-        ],
+              ), // MySliverAppBar
+            ],
         body: TabBarView(
           controller: _tabController,
-          children: const [
-            Center(child: Text('🍔 Menu Page Content')),
-            Center(child: Text('⭐ Reviews Page Content')),
+          children: [
+            Center(child: Text("hello")),
+            Center(child: Text("f")),
+            Center(child: Text("k")),
           ],
         ),
-      ),
-    );
+      ), // NestedScrollView
+    ); // Scaffold
   }
 }
