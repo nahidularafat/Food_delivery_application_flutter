@@ -4,6 +4,7 @@ import 'package:fooddeliveryapp/components/my_description_box.dart';
 import 'package:fooddeliveryapp/components/my_drawer.dart';
 import 'package:fooddeliveryapp/components/my_sliver_app_bar.dart';
 import 'package:fooddeliveryapp/components/my_tab_bar.dart';
+import 'package:fooddeliveryapp/models/food.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+_tabController = TabController(length: FoodCategory.values.length, vsync: this);
   }
 
   @override
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage>
     _tabController.dispose();
     super.dispose(); // শুধুমাত্র একবার থাকা উচিত
   }
+
 
   @override
   Widget build(BuildContext context) {
