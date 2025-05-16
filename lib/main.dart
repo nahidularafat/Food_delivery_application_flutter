@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:fooddeliveryapp/models/resturant.dart';
 // import 'package:fooddeliveryapp/pages/register_page.dart';
 import 'package:provider/provider.dart'; // এটা খুবই জরুরি
 import 'package:fooddeliveryapp/themes/theme_provider.dart';
 import 'package:fooddeliveryapp/auth/login_or_register.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        // theme provider
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        // restaurant provider
+        ChangeNotifierProvider(create: (context) => Restaurant()),
+      ],
       child: const MyApp(),
     ),
   );

@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'food.dart';
 
-class Restaurant {
+class Restaurant extends ChangeNotifier {
   // List of food menu
   final List<Food> _menu = [
     // burgers
@@ -8,7 +9,7 @@ class Restaurant {
       name: "Classic Cheeseburger",
       description:
           "A juicy beef patty with melted cheddar, lettuce, tomato, and a hint of onion and pickle.",
-      imagePath: "lib/images/burgers/cheese_burger.png",
+      imagePath: "lib/images/burgers/pexels-ash-craig-122861-376464.jpg",
       price: 0.99,
       category: FoodCategory.burgers,
       availableAddons: [
@@ -17,12 +18,13 @@ class Restaurant {
         Addon(name: "Avocado", price: 2.99),
       ],
     ),
+
     // salads
     Food(
       name: "Caesar Salad",
       description:
           "Fresh romaine lettuce tossed with Caesar dressing, croutons, and parmesan cheese.",
-      imagePath: "lib/images/salads/caesar_salad.png",
+      imagePath: "lib/images/salads/pexels-vanmalidate-769289.jpg",
       price: 4.99,
       category: FoodCategory.salads,
       availableAddons: [
@@ -30,11 +32,12 @@ class Restaurant {
         Addon(name: "Avocado", price: 1.99),
       ],
     ),
+
     // sides
     Food(
       name: "French Fries",
       description: "Golden and crispy seasoned French fries.",
-      imagePath: "lib/images/sides/french_fries.png",
+      imagePath: "lib/images/sides/pexels-janetrangdoan-1099680.jpg",
       price: 1.99,
       category: FoodCategory.sides,
       availableAddons: [
@@ -42,12 +45,13 @@ class Restaurant {
         Addon(name: "Ranch Dip", price: 0.49),
       ],
     ),
+
     // desserts
     Food(
       name: "Chocolate Lava Cake",
       description:
           "Warm chocolate cake with a molten chocolate center served with vanilla ice cream.",
-      imagePath: "lib/images/desserts/lava_cake.png",
+      imagePath: "lib/images/desserts/pexels-dapur-melodi-192125-1109197.jpg",
       price: 3.99,
       category: FoodCategory.desserts,
       availableAddons: [
@@ -55,11 +59,12 @@ class Restaurant {
         Addon(name: "Caramel Drizzle", price: 0.79),
       ],
     ),
+
     // drinks
     Food(
       name: "Iced Lemon Tea",
       description: "Refreshing iced tea with a splash of lemon.",
-      imagePath: "lib/images/drinks/iced_lemon_tea.png",
+      imagePath: "lib/images/drinks/iced_lemon_tea.png.jpg", // note: double extension, fix if typo
       price: 1.49,
       category: FoodCategory.drinks,
       availableAddons: [
