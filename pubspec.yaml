@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_credit_card: ^4.1.0
+  intl: ^0.20.2
   provider: ^6.1.1   # সর্বশেষ ভার্সন হতে পারে, নিচে "flutter pub outdated" দিয়ে চেক করতে পারেন
 
 dev_dependencies:
