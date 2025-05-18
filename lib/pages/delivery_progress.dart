@@ -33,7 +33,7 @@ class DeliveryProgressPage extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(25),
 
-
+      
       child: Row(
         children: [
           // profile pic of driver
@@ -75,7 +75,7 @@ class DeliveryProgressPage extends StatelessWidget {
     // message button
     Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surface,
         shape: BoxShape.circle,
       ),
       child: IconButton(
@@ -85,12 +85,12 @@ class DeliveryProgressPage extends StatelessWidget {
       ),
     ),
 
-    SizedBox(width: 10), // Optional spacing between buttons
+  const  SizedBox(width: 10), // Optional spacing between buttons
 
     // call button
     Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surface,
         shape: BoxShape.circle,
       ),
       child: IconButton(
