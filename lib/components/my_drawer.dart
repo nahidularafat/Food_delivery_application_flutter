@@ -7,26 +7,10 @@ class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
   // Logout method
-  void logout(BuildContext context) async {
-    try {
-      final authService = AuthService();
-      await authService.signOut();
-      
-      // Optional: Navigate to login screen after logout
-      // Navigator.pushAndRemoveUntil(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => LoginPage()),
-      //   (route) => false,
-      // );
-    } catch (e) {
-      // Show error message if logout fails
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logout failed: ${e.toString()}'),
-        ),
-      );
-    }
-  }
+ void logout(BuildContext context) {
+    final authService = AuthService();
+    authService.signOut();
+}
 
   @override
   Widget build(BuildContext context) {
