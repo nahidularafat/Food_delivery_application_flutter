@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/components/my_button.dart';
 import 'package:fooddeliveryapp/components/my_textfield.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,13 +16,78 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
- // login methoid
-  void login()
-  {
-    //
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => const HomePage(),
-    ));
+
+  // Login method
+  void login() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    try {
+      // Sign in with Firebase Auth
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      // Navigate to home page if login successful
+      if (mounted) {
+        Navigator.pop(context); // Close loading dialog
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      // Close loading dialog
+      Navigator.pop(context);
+      
+      // Show error message
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          title: const Text("Login Error"),
+          content: Text(e.message ?? "An unknown error occurred"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  // Forgot password function
+  void forgotPw() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: const Text("Reset Password"),
+        content: const Text("Enter your email to receive a password reset link"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Implement password reset functionality here
+              Navigator.pop(context);
+            },
+            child: const Text("Send"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -68,6 +133,21 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: "Password",
                   obscureText: true,
                 ),
+                const SizedBox(height: 10),
+
+                // Forgot password
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: forgotPw,
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20),
 
                 // Sign in button
@@ -89,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: widget.onTap,  // 'widget' ব্যবহার করা হলো এখানে
+                      onTap: widget.onTap,
                       child: Text(
                         "Register now",
                         style: TextStyle(
@@ -108,4 +188,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
- 

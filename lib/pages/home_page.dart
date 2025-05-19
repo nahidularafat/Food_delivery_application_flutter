@@ -88,7 +88,7 @@ return ListView.builder(
                       endIndent: 25,
                       color: Theme.of(context).colorScheme.secondary,
                     ),
-                    const MyCurrentLocation(),
+                    MyCurrentLocation(),
                     const MyDescriptionBox(),
                   ],
                 ),

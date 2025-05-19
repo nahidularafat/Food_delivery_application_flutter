@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/components/my_receipt.dart';
+import 'package:fooddeliveryapp/models/resturant.dart';
+import 'package:fooddeliveryapp/services/database/firestore.dart';
+import 'package:provider/provider.dart';
 
-class DeliveryProgressPage extends StatelessWidget {
+class DeliveryProgressPage extends StatefulWidget {
   const DeliveryProgressPage({super.key});
+
+  @override
+  State<DeliveryProgressPage> createState() => _DeliveryProgressPageState();
+}
+
+class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
+
+
+FirestoreService db = FirestoreService();
+
+  // Initialize the Firestore service
+ 
+ @override
+  void initState() {
+    super.initState();
+     //if we get to this page, submit order to firestore db
+     String receipt = context.read<Restaurant>().displayCartReceipt();
+     db.savedOrderToDatabase(receipt);
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +77,7 @@ class DeliveryProgressPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Mitch Koko",
+                "Call to Driver",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,

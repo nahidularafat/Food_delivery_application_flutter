@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:fooddeliveryapp/models/resturant.dart';
+import 'package:provider/provider.dart';
 
 class MyCurrentLocation extends StatelessWidget {
-  const MyCurrentLocation({super.key});
+  MyCurrentLocation({super.key});
+
+  final TextEditingController _textController = TextEditingController();
 
   void openLocationSearchBox(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Your location"),
-        content: const TextField(
-          decoration: InputDecoration(hintText: "Search address..."),
-        ), // TextField
+        content: TextField(
+          controller: _textController,
+          decoration: const InputDecoration(hintText: "enter address..."),
+        ),
         actions: [
           // cancel button
           MaterialButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
-          ), // MaterialButton
-
+          ),
           // save button
           MaterialButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Save'),
-          ), // MaterialButton
+            onPressed: () {
+              // update delivery address
+              String newAddress = _textController.text;
+              context.read<Restaurant>().updateDeliveryAddress(newAddress);
+              Navigator.pop(context);
+              _textController.clear();
+            },
+            child: const Text("Save"),
+          ),
         ],
-      ), // AlertDialog
+      ),
     );
   }
 
@@ -38,27 +48,29 @@ class MyCurrentLocation extends StatelessWidget {
           Text(
             "Deliver now",
             style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ), // Text
+          ),
           GestureDetector(
             onTap: () => openLocationSearchBox(context),
             child: Row(
               children: [
-                // address
-                Text(
-                  "6901 Hollywood Blvd",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontWeight: FontWeight.bold,
-                  ), // TextStyle
-                ), // Text
-
-                // drop down menu
-                const Icon(Icons.keyboard_arrow_down_rounded),
+                Consumer<Restaurant>(
+                  builder: (context, restaurant, child) => Text(
+                    restaurant.deliveryAddress,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
               ],
-            ), // Row
-          ), // GestureDetector
+            ),
+          ),
         ],
-      ), // Column
-    ); // Padding
+      ),
+    );
   }
 }

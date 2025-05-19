@@ -1,12 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fooddeliveryapp/firebase_options.dart';
 import 'package:fooddeliveryapp/models/resturant.dart';
+import 'package:fooddeliveryapp/services/auth/auth_gate.dart';
 // import 'package:fooddeliveryapp/pages/register_page.dart';
 import 'package:provider/provider.dart'; // এটা খুবই জরুরি
 import 'package:fooddeliveryapp/themes/theme_provider.dart';
-import 'package:fooddeliveryapp/auth/login_or_register.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     MultiProvider(
@@ -30,13 +33,13 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginOrRegister(),
+      home: const AuthGate(),
 
-  //     home: RegisterPage(
-  // onTap: () {
-  //   // এখানে আপনি register পেজে যাওয়ার জন্য লজিক দিবেন
-  // },
-//),
+      //     home: RegisterPage(
+      // onTap: () {
+      //   // এখানে আপনি register পেজে যাওয়ার জন্য লজিক দিবেন
+      // },
+      //),
       theme: themeProvider.themeData,
     );
   }

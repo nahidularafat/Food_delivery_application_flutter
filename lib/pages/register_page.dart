@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fooddeliveryapp/components/my_button.dart';
 import 'package:fooddeliveryapp/components/my_textfield.dart';
 
@@ -14,6 +15,58 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+
+  // Register method
+  void register() async {
+    // Show loading circle
+    showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    // Make sure passwords match
+    if (passwordController.text != confirmPasswordController.text) {
+      // Pop loading circle
+      Navigator.pop(context);
+      // Show error message
+      showErrorMessage("Passwords don't match!");
+      return;
+    }
+
+    // Try creating the user
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      
+      // Pop loading circle
+      if (mounted) Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      // Pop loading circle
+      Navigator.pop(context);
+      // Show error message
+      showErrorMessage(e.code);
+    }
+  }
+
+  // Error message to user
+  void showErrorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Center(
+          child: Text(
+            message,
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 // Register button
                 MyButton(
                   text: "Register",
-                  onTap: () {
-                    // Handle registration logic
-                  },
+                  onTap: register, // Updated to call register method
                 ),
                 const SizedBox(height: 20),
 
@@ -89,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: widget.onTap, // 👈 Same as LoginPage
+                      onTap: widget.onTap,
                       child: Text(
                         "Sign in",
                         style: TextStyle(

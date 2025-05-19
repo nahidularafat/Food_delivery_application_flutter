@@ -82,6 +82,14 @@ class Restaurant extends ChangeNotifier {
 
   final List<CartItem> _cart = []; // required field
 
+  // delevery adress
+
+  String _deliveryAddress = "Dhaka, Mirpur-1216";
+
+
+ String get deliveryAddress => _deliveryAddress;
+
+
   // add to cart
   void addToCart(Food food, List<Addon> selectedAddons) {
     // see if there is a cart item already with the same food and selected addons
@@ -158,7 +166,14 @@ class Restaurant extends ChangeNotifier {
     notifyListeners();
   }
 
-  // generate a receipt
+ //update delivery adress 
+  // Update delivery address
+  void updateDeliveryAddress(String newAddress) {
+    _deliveryAddress = newAddress;
+    notifyListeners();
+  }
+
+
 // generate a receipt
 String displayCartReceipt() {
   final receipt = StringBuffer();
@@ -174,7 +189,7 @@ String displayCartReceipt() {
   receipt.writeln("______");
 
   for (final cartItem in _cart) {
-    receipt.writeln( 
+    receipt.writeln(
         "${cartItem.quantity} x ${cartItem.food.name} - ${_formatPrice(cartItem.food.price)}");
     if (cartItem.selectedAddons.isNotEmpty) {
       receipt.writeln(
@@ -187,6 +202,8 @@ String displayCartReceipt() {
   receipt.writeln();
   receipt.writeln("Total Items: ${getTotalItemCount()}");
   receipt.writeln("Total Price: ${_formatPrice(getTotalPrice())}");
+  receipt.writeln("Delivery to : $deliveryAddress"); // moved before return
+
   return receipt.toString();
 }
 

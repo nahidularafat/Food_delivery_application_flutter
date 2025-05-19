@@ -4,10 +4,17 @@ import 'package:fooddeliveryapp/models/cart_item.dart';
 import 'package:fooddeliveryapp/models/resturant.dart';
 import 'package:provider/provider.dart';
 
-class MyCartTile extends StatelessWidget {
+class MyCartTile extends StatefulWidget {
   final CartItem cartItem;
 
   const MyCartTile({super.key, required this.cartItem});
+
+  @override
+  State<MyCartTile> createState() => _MyCartTileState();
+}
+
+class _MyCartTileState extends State<MyCartTile> {
+  // get access to db
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +35,7 @@ class MyCartTile extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.asset(
-                    cartItem.food.imagePath,
+                    widget.cartItem.food.imagePath,
                     height: 100,
                     width: 100,
                   ),
@@ -43,13 +50,13 @@ class MyCartTile extends StatelessWidget {
                     children: [
                       // food name
                       Text(
-                        cartItem.food.name,
+                        widget.cartItem.food.name,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
 
                      // food price
 Text(
-    '\$${cartItem.food.price.toString()}',
+    '\$${widget.cartItem.food.price.toString()}',
     style: TextStyle(
         color: Theme.of(context).colorScheme.primary), // TextStyle
 ), // Text
@@ -58,15 +65,15 @@ Text(
 
                       // quantity selector
                       QuantitySelector(
-                        quantity: cartItem.quantity,
-                        food: cartItem.food,
+                        quantity: widget.cartItem.quantity,
+                        food: widget.cartItem.food,
                         onDecrement: () {
-                          restaurant.removeFromCart(cartItem);
+                          restaurant.removeFromCart(widget.cartItem);
                         },
                         onIncrement: () {
                           restaurant.addToCart(
-                            cartItem.food, 
-                            cartItem.selectedAddons
+                            widget.cartItem.food, 
+                            widget.cartItem.selectedAddons
                           );
                         },
                       ),
@@ -79,11 +86,11 @@ Text(
             // addons
             // addons
 SizedBox(
-    height: cartItem.selectedAddons.isEmpty ? 0 : 60,
+    height: widget.cartItem.selectedAddons.isEmpty ? 0 : 60,
     child: ListView(
     scrollDirection: Axis.horizontal,
     padding: const EdgeInsets.only(left: 10, bottom: 10, right: 10),
-    children: cartItem.selectedAddons
+    children: widget.cartItem.selectedAddons
     .map(
     (addon) => Padding(
     padding: const EdgeInsets.only(right: 8.0),
