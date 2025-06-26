@@ -9,20 +9,24 @@ class MyTabBar extends StatelessWidget {
     required this.tabController,
   });
 
-List<Tab> _buildCategoryTabs() {
-  return FoodCategory.values.map((category) {
-    return Tab(
-      text: category.toString().split('.').last,
-    );
-  }).toList();
-}
-
+  List<Tab> _buildCategoryTabs() {
+    return FoodCategory.values.map((category) {
+      return Tab(
+        icon: Icon(category.icon, size: 20),
+        text: category.label,
+      );
+    }).toList();
+  }
 
   @override
-Widget build(BuildContext context) {
-  return TabBar(
-    controller: tabController,
-    tabs: _buildCategoryTabs(),
-  );
-}
+  Widget build(BuildContext context) {
+    return TabBar(
+      controller: tabController,
+      isScrollable: true,
+      tabs: _buildCategoryTabs(),
+      indicatorColor: Theme.of(context).colorScheme.primary,
+      labelColor: Theme.of(context).colorScheme.primary,
+      unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+    );
+  }
 }

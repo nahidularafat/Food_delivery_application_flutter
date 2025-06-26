@@ -30,3 +30,5 @@ flutter:
     - lib/images/sides/
     - lib/images/drinks/
     - lib/images/desserts/
+    - lib/images/sides/icon.png
+    

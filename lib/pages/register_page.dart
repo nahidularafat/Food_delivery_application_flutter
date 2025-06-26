@@ -11,48 +11,63 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderStateMixin {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  // Register method
+  bool _obscurePassword = true;
+  bool _obscureConfirm = true;
+
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1400),
+      vsync: this,
+    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   void register() async {
-    // Show loading circle
     showDialog(
       context: context,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
-    // Make sure passwords match
     if (passwordController.text != confirmPasswordController.text) {
-      // Pop loading circle
       Navigator.pop(context);
-      // Show error message
       showErrorMessage("Passwords don't match!");
       return;
     }
 
-    // Try creating the user
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
-      
-      // Pop loading circle
+
       if (mounted) Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      // Pop loading circle
       Navigator.pop(context);
-      // Show error message
-      showErrorMessage(e.code);
+      showErrorMessage(e.message ?? "Registration failed");
     }
   }
 
-  // Error message to user
   void showErrorMessage(String message) {
     showDialog(
       context: context,
@@ -70,88 +85,116 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final fillColor = Colors.grey.shade100;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Logo
-                Icon(
-                  Icons.person_add_alt_1_rounded,
-                  size: 72,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                const SizedBox(height: 25),
-
-                // App title
-                Text(
-                  'Create an Account',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Theme.of(context).colorScheme.onSurface,
+      backgroundColor: Colors.white,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo
+                  Image.asset(
+                    'lib/images/sides/icon.png',
+                    height: 100,
                   ),
-                ),
-                const SizedBox(height: 25),
+                  const SizedBox(height: 15),
+                  Text(
+                    'Create an Account',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple.shade700,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
 
-                // Email field
-                MyTextField(
-                  controller: emailController,
-                  hintText: "Email",
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
+                  MyTextField(
+                    controller: emailController,
+                    hintText: "Email",
+                    obscureText: false,
+                    fillColor: fillColor,
+                    prefixIcon: Icon(Icons.email, color: Colors.deepPurple.shade400),
+                    suffixIcon: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.check_circle_outline, color: Colors.deepPurple.shade400),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
 
-                // Password field
-                MyTextField(
-                  controller: passwordController,
-                  hintText: "Password",
-                  obscureText: true,
-                ),
-                const SizedBox(height: 10),
-
-                // Confirm Password field
-                MyTextField(
-                  controller: confirmPasswordController,
-                  hintText: "Confirm Password",
-                  obscureText: true,
-                ),
-                const SizedBox(height: 20),
-
-                // Register button
-                MyButton(
-                  text: "Register",
-                  onTap: register, // Updated to call register method
-                ),
-                const SizedBox(height: 20),
-
-                // Already have an account? Sign in
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already a member?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
+                  MyTextField(
+                    controller: passwordController,
+                    hintText: "Password",
+                    obscureText: _obscurePassword,
+                    fillColor: fillColor,
+                    prefixIcon: Icon(Icons.lock, color: Colors.deepPurple.shade400),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.deepPurple.shade400,
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: Text(
-                        "Sign in",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(height: 15),
+
+                  MyTextField(
+                    controller: confirmPasswordController,
+                    hintText: "Confirm Password",
+                    obscureText: _obscureConfirm,
+                    fillColor: fillColor,
+                    prefixIcon: Icon(Icons.lock_outline, color: Colors.deepPurple.shade400),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscureConfirm = !_obscureConfirm;
+                        });
+                      },
+                      icon: Icon(
+                        _obscureConfirm ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.deepPurple.shade400,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+                  MyButton(
+                    text: "Register",
+                    onTap: register,
+                  ),
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Already a member?",
+                        style: TextStyle(color: Colors.deepPurple.shade700),
+                      ),
+                      const SizedBox(width: 5),
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Text(
+                          "Sign in",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.deepPurple.shade700,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

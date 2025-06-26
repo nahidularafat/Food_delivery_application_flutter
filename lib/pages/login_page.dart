@@ -13,41 +13,55 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
-  // Login method
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   void login() async {
-    // Show loading dialog
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
     try {
-      // Sign in with Firebase Auth
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
-      // Navigate to home page if login successful
       if (mounted) {
-        Navigator.pop(context); // Close loading dialog
+        Navigator.pop(context);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
       }
     } on FirebaseAuthException catch (e) {
-      // Close loading dialog
       Navigator.pop(context);
-      
-      // Show error message
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -65,7 +79,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // Forgot password function
   void forgotPw() {
     showDialog(
       context: context,
@@ -80,8 +93,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           TextButton(
             onPressed: () {
-              // Implement password reset functionality here
               Navigator.pop(context);
+              // এখানে তুমি Firebase Password reset link পাঠানোর কোড যোগ করতে পারো
             },
             child: const Text("Send"),
           ),
@@ -92,95 +105,106 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColorForTextField = Theme.of(context).colorScheme.surface;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Logo
-                Icon(
-                  Icons.lock_open_rounded,
-                  size: 72,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                const SizedBox(height: 25),
-
-                // App name or slogan
-                Text(
-                  'Food Delivery App',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Theme.of(context).colorScheme.onSurface,
+      backgroundColor: Colors.white,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'lib/images/sides/icon.png',
+                    height: 100,
                   ),
-                ),
-                const SizedBox(height: 25),
+                  const SizedBox(height: 15),
+                  Text(
+                    'Welcome Back!',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
 
-                // Email field
-                MyTextField(
-                  controller: emailController,
-                  hintText: "Email",
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
+                  MyTextField(
+                    controller: emailController,
+                    hintText: "Email",
+                    obscureText: false,
+                    fillColor: backgroundColorForTextField,
+                    prefixIcon: Icon(Icons.email, color: Colors.deepPurple.shade400),
+                    suffixIcon: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.check_circle_outline, color: Colors.deepPurple.shade400),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
 
-                // Password field
-                MyTextField(
-                  controller: passwordController,
-                  hintText: "Password",
-                  obscureText: true,
-                ),
-                const SizedBox(height: 10),
-
-                // Forgot password
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: forgotPw,
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
+                  MyTextField(
+                    controller: passwordController,
+                    hintText: "Password",
+                    obscureText: _obscurePassword,
+                    fillColor: backgroundColorForTextField,
+                    prefixIcon: Icon(Icons.lock, color: Colors.deepPurple.shade400),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.deepPurple.shade400,
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
 
-                // Sign in button
-                MyButton(
-                  text: "Sign In",
-                  onTap: login,
-                ),
-                const SizedBox(height: 20),
-
-                // Not a member? Register now
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Not a member?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: widget.onTap,
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: forgotPw,
                       child: Text(
-                        "Register now",
+                        "Forgot Password?",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+
+                  const SizedBox(height: 30),
+                  MyButton(
+                    text: "Sign In",
+                    onTap: login,
+                  ),
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Don't have an account?"),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Text(
+                          "Register now",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
