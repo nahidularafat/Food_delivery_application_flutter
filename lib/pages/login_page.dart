@@ -5,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const LoginPage({super.key, required this.onTap});
+  const LoginPage({super.key, this.onTap});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       );
 
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.pop(context); // Close loading dialog
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              // এখানে তুমি Firebase Password reset link পাঠানোর কোড যোগ করতে পারো
+              // এখানে Firebase password reset logic দিতে পারো
             },
             child: const Text("Send"),
           ),
@@ -192,7 +192,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       const Text("Don't have an account?"),
                       const SizedBox(width: 4),
                       GestureDetector(
-                        onTap: widget.onTap,
+                        onTap: widget.onTap ?? () {},
                         child: Text(
                           "Register now",
                           style: TextStyle(

@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryapp/services/auth/auth_services.dart';
 import '../pages/settings_pages.dart';
-import '../pages/home_page.dart'; // Make sure to import your HomePage
+import '../pages/home_page.dart';
+import '../pages/login_page.dart'; // Make sure this is correct
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
   // Logout method
- void logout(BuildContext context) {
+  void logout(BuildContext context) {
     final authService = AuthService();
-    authService.signOut();
-}
+    authService.signOut(); // Firebase থেকে sign out
+
+    // Login page এ পাঠাও এবং পুরা stack ক্লিয়ার করে দাও
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginPage(),
+      ),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +28,7 @@ class MyDrawer extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         children: [
-          // Drawer header with app logo
+          // Drawer Header
           DrawerHeader(
             child: Center(
               child: Icon(
@@ -32,12 +42,10 @@ class MyDrawer extends StatelessWidget {
           // Divider
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Divider(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
+            child: Divider(color: Theme.of(context).colorScheme.secondary),
           ),
 
-          // Home list tile
+          // Home Tile
           ListTile(
             leading: Icon(
               Icons.home,
@@ -48,14 +56,12 @@ class MyDrawer extends StatelessWidget {
               Navigator.pop(context); // Close drawer
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const HomePage(),
-                ),
+                MaterialPageRoute(builder: (context) => const HomePage()),
               );
             },
           ),
 
-          // Settings list tile
+          // Settings Tile
           ListTile(
             leading: Icon(
               Icons.settings,
@@ -66,25 +72,21 @@ class MyDrawer extends StatelessWidget {
               Navigator.pop(context); // Close drawer
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
-                ),
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
               );
             },
           ),
 
-          // Spacer to push logout to bottom
+          // Spacer pushes logout to bottom
           const Spacer(),
 
           // Divider
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Divider(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
+            child: Divider(color: Theme.of(context).colorScheme.secondary),
           ),
 
-          // Logout list tile
+          // Logout Tile
           ListTile(
             leading: Icon(
               Icons.logout,
@@ -92,12 +94,11 @@ class MyDrawer extends StatelessWidget {
             ),
             title: const Text("L O G O U T"),
             onTap: () {
-              Navigator.pop(context); // Close drawer
-              logout(context); // Call logout function
+              logout(context); // Call logout
             },
           ),
 
-          const SizedBox(height: 25), // Bottom padding
+          const SizedBox(height: 25),
         ],
       ),
     );

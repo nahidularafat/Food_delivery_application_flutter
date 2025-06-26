@@ -15,6 +15,7 @@ class MyReceipt extends StatelessWidget {
           children: [
             const Text("Thank you for your order!"),
             const SizedBox(height: 25),
+
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
@@ -24,11 +25,24 @@ class MyReceipt extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(25),
               child: Consumer<Restaurant>(
-                builder:
-                    (context, restaurant, child) =>
-                        Text(restaurant.displayCartReceipt()),
+                builder: (context, restaurant, child) =>
+                    Text(restaurant.displayCartReceipt()),
               ),
             ),
+
+            const SizedBox(height: 15),
+
+            // 🍔 Estimated Calories
+            Consumer<Restaurant>(
+              builder: (context, restaurant, child) => Text(
+                restaurant.getEstimatedCalories(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepOrange,
+                ),
+              ),
+            ),
+
             const SizedBox(height: 25),
             const Text("Estimated delivery time is: 4:10 PM"),
           ],

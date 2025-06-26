@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fooddeliveryapp/models/cart_item.dart';
 import 'package:intl/intl.dart';
 import 'food.dart';
-
+import 'dart:math';
 class Restaurant extends ChangeNotifier {
   // List of food menu
   final List<Food> _menu = [
@@ -541,6 +541,8 @@ Food(
     return totalItemCount;
   }
 
+  
+
   // clear cart
   void clearCart() {
     _cart.clear();
@@ -600,5 +602,39 @@ String _formatAddons(List<Addon> addons) {
     .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
     .join(",");
 }
+
+
+
+String getEstimatedCalories() {
+  int totalCalories = 0;
+  int itemCount = 0;
+
+  for (CartItem item in _cart) {
+    itemCount += item.quantity;
+
+    String desc = item.food.description.toLowerCase();
+    if (desc.contains('~')) {
+      final regex = RegExp(r'~(\d+)[–-](\d+)\s*kcal');
+      final match = regex.firstMatch(desc);
+      if (match != null) {
+        int low = int.tryParse(match.group(1) ?? '') ?? 0;
+        int high = int.tryParse(match.group(2) ?? '') ?? 0;
+        totalCalories += ((low + high) ~/ 2) * item.quantity;
+      }
+    }
+  }
+
+  if (itemCount == 0) return "Calorie estimate unavailable";
+
+  final random = Random();
+  int variation = random.nextInt(100) - 50; // -50 to +49
+  int estimated = totalCalories + variation;
+  int minCal = (estimated * 0.95).round();
+  int maxCal = (estimated * 1.05).round();
+
+  return "Estimated total calories: $minCal–$maxCal kcal";
+}
+
+
 
 }
