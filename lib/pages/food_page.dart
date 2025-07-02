@@ -64,7 +64,7 @@ void addToCart(Food food, Map<Addon, bool> selectedAddons) {
 
                       // food price
                       Text(
-                        '\$${widget.food.price}',
+                        '\TK ${widget.food.price}',
                         style: TextStyle(
                           fontSize: 16,
                           color: Theme.of(context).colorScheme.primary,
@@ -103,7 +103,7 @@ void addToCart(Food food, Map<Addon, bool> selectedAddons) {
                             return CheckboxListTile(
                               title: Text(addon.name),
                               subtitle: Text(
-                                '\$${addon.price.toStringAsFixed(2)}',
+                                '\TK ${addon.price.toStringAsFixed(2)}',
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.primary,
                                 ),

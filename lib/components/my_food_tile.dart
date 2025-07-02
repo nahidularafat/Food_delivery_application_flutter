@@ -35,7 +35,8 @@ class FoodTile extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '\$${food.price.toString()}',
+                        // এখানে Tk যোগ করা হলো
+                        'Tk ${food.price.toString()}',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -44,9 +45,7 @@ class FoodTile extends StatelessWidget {
                       Text(
                         food.description,
                         style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .inversePrimary,
+                          color: Theme.of(context).colorScheme.inversePrimary,
                         ),
                       ),
                     ],

@@ -34,12 +34,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const AuthGate(),
-
-      //     home: RegisterPage(
-      // onTap: () {
-      //   // এখানে আপনি register পেজে যাওয়ার জন্য লজিক দিবেন
-      // },
-      //),
       theme: themeProvider.themeData,
     );
   }

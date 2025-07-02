@@ -54,12 +54,12 @@ class _MyCartTileState extends State<MyCartTile> {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
 
-                     // food price
-Text(
-    '\$${widget.cartItem.food.price.toString()}',
-    style: TextStyle(
-        color: Theme.of(context).colorScheme.primary), // TextStyle
-), // Text
+                      // food price
+                      Text(
+                        'TK${widget.cartItem.food.price.toString()}',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary), // TextStyle
+                      ), // Text
 
                       const SizedBox(height: 10),
 
@@ -84,40 +84,39 @@ Text(
             ),
 
             // addons
-            // addons
-SizedBox(
-    height: widget.cartItem.selectedAddons.isEmpty ? 0 : 60,
-    child: ListView(
-    scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.only(left: 10, bottom: 10, right: 10),
-    children: widget.cartItem.selectedAddons
-    .map(
-    (addon) => Padding(
-    padding: const EdgeInsets.only(right: 8.0),
-    child: FilterChip(
-    label: Row(
-    children: [
-    // addon name
-    Text(addon.name),
-    // addon price
-    Text(' (\$${addon.price})'),
-    ],
-    ), // Row
-    shape: StadiumBorder(
-    side: BorderSide(
-    color: Theme.of(context).colorScheme.primary)), // BorderSide // Sta
-    onSelected: (value) {},
-    backgroundColor: Theme.of(context).colorScheme.secondary,
-    labelStyle: TextStyle(
-    color: Theme.of(context).colorScheme.inversePrimary,
-    fontSize: 12,
-    ), // TextStyle
-    ), // FilterChip
-    ),
-    )
-    .toList(),
-    ), // ListView
-), // SizedBox
+            SizedBox(
+              height: widget.cartItem.selectedAddons.isEmpty ? 0 : 60,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.only(left: 10, bottom: 10, right: 10),
+                children: widget.cartItem.selectedAddons
+                  .map(
+                    (addon) => Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: FilterChip(
+                        label: Row(
+                          children: [
+                            // addon name
+                            Text(addon.name),
+                            // addon price
+                            Text(' (TK${addon.price})'),
+                          ],
+                        ), // Row
+                        shape: StadiumBorder(
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary)), // BorderSide // Sta
+                        onSelected: (value) {},
+                        backgroundColor: Theme.of(context).colorScheme.secondary,
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: 12,
+                        ), // TextStyle
+                      ), // FilterChip
+                    ),
+                  )
+                  .toList(),
+              ), // ListView
+            ), // SizedBox
           ],
         ),
       ),
